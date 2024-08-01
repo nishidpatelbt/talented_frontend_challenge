@@ -1,0 +1,126 @@
+{% comment %} Include Tailwind CSS CDN {% endcomment %}
+<script src="https://cdn.tailwindcss.com" defer></script>
+
+{% comment %} Include Vue 3 CDN {% endcomment %}
+<script src="https://cdn.jsdelivr.net/npm/vue@3.2.20/dist/vue.global.prod.min.js" defer></script>
+
+{% raw %}
+  <div class="bg-clifford pb-8 pt-2 sm:pt-20">
+  <div id="vue-responsive-grid-section" class="container mx-auto px-8 relative sm:px-4">
+    <h1 class="font-bold text-center text-white text-5xl font-Gotham m-12 before:content-[''] before:absolute before:h-1 before:w-12 before:bg-white before:left-45 before:top-32 sm:before:top-20 sm:before:inset-x-2/4 sm:text-6xl">{{ section.title }}</h1>
+    <p class="text-center text-[#65757e] font-thin text-3xl max-w-30 my-0 mx-auto mb-7 pt-3 sm:mb-14 sm:pt-0 sm:max-w-78">{{ section.description }}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
+      <div v-for="(block, index) in blocks" class="text-center">
+        <div class="flex justify-center bg-grey rounded-t-xl py-14 sm:p-12">
+          <img :src="section.block_common_image" alt="Common Image"/>
+        </div>
+        <div class="bg-black py-9 sm:py-6">
+        <h3 class="font-bold text-white uppercase text-3xl">{{ block.title }}</h3>
+        <p v-if="!block.showFullDescription" class="description-truncate text-[#65757e] font-thin text-3xl my-6 max-w-sm mx-auto sm:max-w-md">
+          {{ block.sort_description }}
+        </p>
+        <p v-else class="description-full text-[#65757e] font-thin text-3xl my-6 max-w-sm mx-auto sm:max-w-md">
+          {{ block.description }}
+        </p>
+        <div v-if="!block.showFullDescription" class="text-center">
+          <span @click="toggleDescription(block, index)" class="cursor-pointer flex justify-center bg-darkgrey w-14 h-14 my-0 mx-auto rounded-full mt-10 mb-6 sm:mt-0 sm:mb-0">
+            <svg class="text-white w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+              <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" fill="white"></path></svg>
+          </span>
+        </div>
+        <div v-else class="text-center">
+          <span @click="toggleDescription(block, index)" class="cursor-pointer flex justify-center bg-darkgrey w-14 h-14 my-0 mx-auto rounded-full mt-10 mb-6">
+            <svg class="text-white w-6" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z" fill="white"></path></svg>
+          </span>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endraw %}
+
+<script>
+  window.sectionData = {
+    title: '{{ section.settings.heading }}',
+    description: '{{ section.settings.description }}',
+    block_common_image: '{{ 'Layer_3.png' | file_img_url }}',
+    blocks: [
+      {% for block in section.blocks %}
+      {
+        title: '{{ block.settings.card_title }}',
+        sort_description: '{{ block.settings.block_sort_description | escape }}',
+        description: '{{ block.settings.block_description | escape }}',
+        showFullDescription: false
+      },
+      {% endfor %}
+    ]
+  };
+</script>
+
+{% comment %} Link to JavaScript files {% endcomment %}
+<script src="{{ 'tailwind.config.js' | asset_url }}" defer></script>
+<script src="{{ 'multi-box.js' | asset_url }}" defer></script>
+
+{% schema %}
+{
+  "name": "Multi Talented Boxes",
+  "tag": "section",
+  "class": "experienced-multi-telented",
+  "settings": [
+    {
+      "type": "text",
+      "label": "Heading",
+      "id": "heading",
+      "default": "Experienced & Multi-Talented"
+    },
+    {
+      "type": "textarea",
+      "label": "description",
+      "id": "description"
+    },
+    {
+      "type": "image_picker",
+      "id": "lb_logo",
+      "label": "image"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card_item",
+      "name": "Card Item",
+      "settings": [
+        {
+          "type": "text",
+          "label": "Card title",
+          "id": "card_title",
+          "default": "Block"
+        },
+        {
+          "type": "textarea",
+          "label": "Sort Description",
+          "id": "block_sort_description",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        },
+        {
+          "type": "textarea",
+          "label": "Description",
+          "id": "block_description",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut vestibulum eros nisi, eu sagittis nisl feugiat quis."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi Talented Boxes"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
